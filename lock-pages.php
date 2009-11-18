@@ -4,7 +4,7 @@ Plugin Name: Lock Pages
 Plugin URI: http://wordpress.org/extend/plugins/lock-pages/
 Description: Allows admins to lock page slugs and parent page setting in order to prevent breakage of important URLs.
 Author: Steve Taylor
-Version: 0.1.2
+Version: 0.1.3
 Author URI: http://sltaylor.co.uk
 Based on: http://pressography.com/plugins/wordpress-plugin-template/
 */
@@ -284,14 +284,15 @@ if ( !class_exists('SLT_LockPages') ) {
 		function saveMeta( $postID, $post ) {
 
 			/* Block:
-			- Users who can't edit pages
 			- Users who can't change locked pages
-			- Revision updates
+			- Users who can't edit pages
+			- Revisions, autoupdates and posts etc.
 			*/
-			if (	( 'page' == $post->post_type && !current_user_can( 'edit_pages', $postID ) ) ||
-					!current_user_can( $this->options[$this->prefix.'capability'] ) ||
-					( 'revision' == $post->post_type )
-				)
+			if (
+					( !current_user_can( $this->options[$this->prefix.'capability'] ) ) ||
+					( !current_user_can( 'edit_pages', $postID ) ) ||
+					( $post->post_type != 'page' )
+			)
 				return;
 
 			// Get list of locked pages

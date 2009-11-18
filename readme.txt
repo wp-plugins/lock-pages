@@ -3,7 +3,7 @@ Contributors: gyrus
 Donate link: http://www.corporatewatch.org.uk/?lid=2533
 Tags: admin, administration, cms, page, pages, permalink, seo
 Requires at least: 2.8
-Tested up to: 2.8.5
+Tested up to: 2.8.6
 Stable tag: trunk
 
 Lock Pages prevents specified pages (or all pages) from having their slug or parent edited, or from being deleted, by non-administrators.
@@ -64,6 +64,9 @@ Of course, contributing back to the WordPress community is also a great way to e
 4. The pages list will show which pages are currently locked
 
 == Changelog ==
+
+= 0.1.3 =
+* Added an important check in saveMeta function to make sure that a page (not a post, revision or autoupdate) is being saved. See http://alexking.org/blog/2008/09/06/wordpress-26x-duplicate-custom-field-issue
 
 = 0.1.2 =
 * Added prevention of deletion of locked pages.
