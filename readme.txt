@@ -65,6 +65,9 @@ Of course, contributing back to the WordPress community is also a great way to e
 
 == Changelog ==
 
+= 0.1.4 =
+* Added a check in lockParent to make sure it's not handling a file upload. Without this, the lock was preventing files being attached to a locked page.
+
 = 0.1.3 =
 * Added an important check in saveMeta function to make sure that a page (not a post, revision or autoupdate) is being saved. See http://alexking.org/blog/2008/09/06/wordpress-26x-duplicate-custom-field-issue
 
@@ -79,6 +82,10 @@ Of course, contributing back to the WordPress community is also a great way to e
 
 = 0.1 =
 * First release.
+
+== Known issues ==
+
+* Although I've fixed the lockParent function so it allows uploaded files to be attached to a locked page, it still prevents media already in the library from being attached when inserted.
 
 == Ideas ==
 
