@@ -4,7 +4,7 @@ Plugin Name: Lock Pages
 Plugin URI: http://wordpress.org/extend/plugins/lock-pages/
 Description: Allows admins to lock page slugs and parent page setting in order to prevent breakage of important URLs.
 Author: Steve Taylor
-Version: 0.1.5
+Version: 0.1.6
 Author URI: http://sltaylor.co.uk
 Based on: http://pressography.com/plugins/wordpress-plugin-template/
 */
@@ -203,7 +203,7 @@ if ( !class_exists('SLT_LockPages') ) {
 		*/
 		function lockParent( $parent ) {
 			// Make sure this isn't an uploaded attachment
-			if ( !isset( $_POST["html-upload"] ) || $_POST["html-upload"] != "Upload" ) {
+			if ( !isset( $_POST["attachments"] ) && !isset( $_POST["html-upload"] ) ) {
 				// Can user edit this page?
 				if ( $this->userCanEdit( $_POST['post_ID'] ) ) {
 					return $parent;

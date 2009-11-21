@@ -67,6 +67,9 @@ Of course, contributing back to the WordPress community is also a great way to e
 
 == Changelog ==
 
+= 0.1.6 =
+* Refined check in lockParent so now uploads stay attached to a page even if you edit the attachment details after uploading.
+
 = 0.1.5 =
 * Added (hopefully temporary) blocking of Quick Edit functionality on pages that are locked for user who can't edit locked page elements.
 
