@@ -4,7 +4,7 @@ Plugin Name: Lock Pages
 Plugin URI: http://wordpress.org/extend/plugins/lock-pages/
 Description: Allows admins to lock page slugs and parent page setting in order to prevent breakage of important URLs.
 Author: Steve Taylor
-Version: 0.1.4
+Version: 0.1.5
 Author URI: http://sltaylor.co.uk
 Based on: http://pressography.com/plugins/wordpress-plugin-template/
 */
@@ -46,6 +46,7 @@ if ( !class_exists('SLT_LockPages') ) {
 
 		/**
 		* @var	string	$prefix	The prefix for any form fields etc.
+		* Note that this has had to be hard-coded into lock-pages.js
 		*/
 		var $prefix = 'slt_lockpages_';
 		/**
@@ -100,6 +101,7 @@ if ( !class_exists('SLT_LockPages') ) {
 			// We only need the meta box on the edit screen if scope isn't set to lock all pages
 			if ( $this->options[$this->prefix.'scope'] != "all" ) {
 				add_action( 'admin_menu', array( &$this, 'createMetaBox' ) );
+				//add_action( 'quick_edit_custom_box', array( &$this, 'outputQuickEdit' ), 1, 2 );
 				add_action( 'save_post', array( &$this, 'saveMeta' ), 1, 2 );
 			}
 
@@ -107,12 +109,27 @@ if ( !class_exists('SLT_LockPages') ) {
 			add_filter( 'name_save_pre', array( &$this, 'lockSlug' ), 0 );
 			add_filter( 'parent_save_pre', array( &$this, 'lockParent' ), 0 );
 			add_filter( 'user_has_cap', array( &$this, 'lockDeletion' ), 0, 3 );
+			add_filter( 'page_row_actions', array( &$this, 'removeQuickEdit' ), 10, 2 );
 
-			// Page list column
+			// Page list management
 			add_filter( 'manage_pages_columns', array( &$this, 'pagesListCol' ) );
 			add_action( 'manage_pages_custom_column', array( &$this, 'pagesListColValue' ), 10, 2 );
-			add_filter( 'admin_head', array( &$this, 'adminCSS' ) );
+			add_filter( 'admin_head', array( &$this, 'adminHeader' ) );
+			//add_filter( 'admin_footer', array( &$this, 'adminFooter' ) );
 
+		}
+
+		/**
+		* Remove Quick Edit link from locked pages.
+		*
+		* @since		0.1.5
+		* @param		array		$cols		The columns
+		* @return	array
+		*/
+		function removeQuickEdit( $actions, $page ) {
+			if ( array_key_exists( "inline", $actions ) && !$this->userCanEdit( $page->ID ) )
+				unset ( $actions["inline"] );
+			return $actions;	
 		}
 
 		/**
@@ -145,12 +162,21 @@ if ( !class_exists('SLT_LockPages') ) {
 		}
 
 		/**
-		* Extra CSS for admin
+		* Extra stuff for admin header
 		*
-		* @since		0.1.2
+		* @since		0.1.5
 		*/
-		function adminCSS() {
+		function adminHeader() {
 			echo '<link rel="stylesheet" type="text/css" href="' . WP_PLUGIN_URL . '/lock-pages/lock-pages.css" />';
+		}
+
+		/**
+		* Extra stuff for admin footer
+		*
+		* @since		0.1.5
+		*/
+		function adminFooter() {
+			/*echo '<script type="text/javascript" src="' . WP_PLUGIN_URL . '/lock-pages/lock-pages.js"></script>';*/
 		}
 
 		/**
@@ -279,6 +305,34 @@ if ( !class_exists('SLT_LockPages') ) {
 				<?php
 			}
 		}
+        
+		/**
+ 		* Outputs stuff for quick edit.
+ 		* Having trouble finding how to populate value with JS
+ 		* Still needed for now to include old slug / parent
+ 		*
+ 		* @since		0.1.5
+ 		* @global	$post
+ 		*/
+		function outputQuickEdit( $column_name, $type ) {
+			if ( $type == "page" ) {
+				/*if ( current_user_can( $this->options[$this->prefix.'capability'] ) ) { ?>
+				
+				<fieldset class="inline-edit-col-left"><div class="inline-edit-col">
+					<label>
+						<span class="title"><?php _e( 'Lock', $this->localizationDomain ); ?></span>
+						<input type="checkbox" name="<?php echo $this->prefix; ?>locked" id="<?php echo $this->prefix; ?>locked" value="true" />
+					</label>
+				</div></fieldset>
+			
+				<?php }*/ ?>
+				
+				<input type="hidden" name="<?php echo $this->prefix; ?>old_slug" value="" />
+				<input type="hidden" name="<?php echo $this->prefix; ?>old_parent" value="" />
+				
+				<?php
+			}
+		}
 
 		/**
  		* Saves the page locking metabox data to a custom field.
@@ -291,12 +345,13 @@ if ( !class_exists('SLT_LockPages') ) {
 			/* Block:
 			- Users who can't change locked pages
 			- Users who can't edit pages
-			- Revisions, autoupdates and posts etc.
+			- Revisions, autoupdates, quick edits, posts etc.
 			*/
 			if (
 					( !current_user_can( $this->options[$this->prefix.'capability'] ) ) ||
 					( !current_user_can( 'edit_pages', $postID ) ) ||
-					( $post->post_type != 'page' )
+					( $post->post_type != 'page' ) ||
+					isset( $_POST["_inline_edit"] )
 			)
 				return;
 

@@ -18,6 +18,8 @@ This plugin lets administrators "lock" any or all pages. "Locking" here basicall
 * Changing the page's parent
 * Deleting the page
 
+NOTE: Currently, I've been unable to get this working with the Quick Edit functionality. As a stop-gap measure, which is only in place because it seems to be better than nothing, the Quick Edit link is removed for users who can't edit locked pages. I know, it's not great. But until I work out how to selectively block Quick Editing, I'm assuming a locked page should be locked. Users can always edit the other fields via the normal edit page.
+
 == Installation ==
 
 It's easiest to use the built-in plugin installer inside WordPress. Go to *Plugins > Add New*, and search for "lock pages".
@@ -46,7 +48,7 @@ I couldn't find a way to actually disable those form elements, so what I've done
 
 = Does the locking work with Quick Edit as well? =
 
-Yes.
+No. I'm having problems getting this working properly. Until then, sadly, I've had to remove the Quick Edit link from locked pages for users who can't change their slug or parent. Sorry! They can still edit other things with the normal edit screen.
 
 = What's the donate link about? =
 
@@ -64,6 +66,9 @@ Of course, contributing back to the WordPress community is also a great way to e
 4. The pages list will show which pages are currently locked
 
 == Changelog ==
+
+= 0.1.5 =
+* Added (hopefully temporary) blocking of Quick Edit functionality on pages that are locked for user who can't edit locked page elements.
 
 = 0.1.4 =
 * Added a check in lockParent to make sure it's not handling a file upload. Without this, the lock was preventing files being attached to a locked page.
@@ -85,11 +90,10 @@ Of course, contributing back to the WordPress community is also a great way to e
 
 == Known issues ==
 
+* Quick Edit presents problems. I've worked out how to create hidden fields in the Quick Edit box, and to put the values in the hidden div, but I can't work out how to dynamically populate the fields with the values, so the old values can be used if necessary on saving. For now Quick Edit is blocked for users who can't edit locked pages.
 * Although I've fixed the lockParent function so it allows uploaded files to be attached to a locked page, it still prevents media already in the library from being attached when inserted.
 
 == Ideas ==
-
-This is a pretty simple plugin, but there's always room for improvement. Here's a list of my ideas that I'll try to look into when I get time, and which I'd be delighted if anyone else could have a go at implementing!
 
 * Disable the slug and parent form elements as well as catching edits on saving.
 * Include the locking checkbox for admins in the Quick Edit form.
