@@ -3,8 +3,8 @@ Contributors: gyrus
 Donate link: http://www.babyloniantimes.co.uk/index.php?page=donate
 Tags: admin, administration, cms, page, pages, permalink, seo
 Requires at least: 3.0
-Tested up to: 3.1.2
-Stable tag: 2.0
+Tested up to: 3.1.3
+Stable tag: 0.2.1
 
 Lock Pages prevents specified pages (or all pages) from having their slug, parent, status or password edited, or from being deleted, by non-administrators.
 
@@ -66,6 +66,9 @@ Of course, contributing back to the WordPress community is also a great way to e
 4. The pages list will show which pages are currently locked
 
 == Changelog ==
+
+= 0.2.1
+* Fixed clash with Simple Page Ordering plugin
 
 = 0.2 =
 * Updated check for page edit screen for WP 3

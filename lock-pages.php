@@ -4,7 +4,7 @@ Plugin Name: Lock Pages
 Plugin URI: http://wordpress.org/extend/plugins/lock-pages/
 Description: Allows admins to lock pages in order to prevent breakage of important URLs.
 Author: Steve Taylor
-Version: 0.2
+Version: 0.2.1
 Author URI: http://sltaylor.co.uk
 Based on: http://pressography.com/plugins/wordpress-plugin-template/
 */
@@ -281,7 +281,7 @@ if ( ! class_exists('SLT_LockPages') ) {
 			$user_id = count( $args ) > 1 ? $args[1] : 0;
 			$post_id = count( $args ) > 2 ? $args[2] : 0;
 			// Is the check for deleting a page?
-			if ( ( $cap_check == "delete_page" || $cap_check == "delete_post" ) && $post_id && $post->post_type == "page" ) {
+			if ( ( $cap_check == "delete_page" || $cap_check == "delete_post" ) && $post_id && is_object( $post ) && property_exists( $post, 'post_type' ) && $post->post_type == "page" ) {
 				// Basic check for "edit locked page" capability
 				$user_can = array_key_exists( $this->options[$this->prefix.'capability'], $allcaps ) && $allcaps[ $this->options[$this->prefix.'capability'] ];
 				// Override it if page isn't locked and scope isn't all pages
@@ -373,12 +373,14 @@ if ( ! class_exists('SLT_LockPages') ) {
 			- Users who can't change locked pages
 			- Users who can't edit pages
 			- Revisions, autoupdates, quick edits, posts etc.
+			- Simple Page Ordering plugin
 			*/
 			if (
 				( ! current_user_can( $this->options[$this->prefix.'capability'] ) ) ||
 				( ! current_user_can( 'edit_pages', $post_id ) ) ||
 				( $post->post_type != 'page' ) ||
-				isset( $_POST["_inline_edit"] )
+				isset( $_POST["_inline_edit"] ) ||
+				( isset( $_REQUEST["action"] ) && $_REQUEST["action"] == 'simple_page_ordering'  )
 			)
 				return;
 
