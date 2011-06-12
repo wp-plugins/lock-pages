@@ -67,7 +67,7 @@ Of course, contributing back to the WordPress community is also a great way to e
 
 == Changelog ==
 
-= 0.2.1
+= 0.2.1 =
 * Fixed clash with Simple Page Ordering plugin
 
 = 0.2 =
