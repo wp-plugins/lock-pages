@@ -4,7 +4,7 @@ Donate link: http://www.babyloniantimes.co.uk/index.php?page=donate
 Tags: admin, administration, cms, page, pages, permalink, seo
 Requires at least: 3.0
 Tested up to: 3.1.3
-Stable tag: 0.2.1
+Stable tag: 0.2.2
 
 Lock Pages prevents specified pages (or all pages) from having their slug, parent, status or password edited, or from being deleted, by non-administrators.
 
@@ -16,6 +16,7 @@ This plugin lets administrators "lock" any or all pages. "Locking" here basicall
 
 * Editing the page's slug
 * Changing the page's parent
+* Changing the page's template
 * Deleting the page
 * Changing the page's status
 * Changing the page's password protection
@@ -66,6 +67,9 @@ Of course, contributing back to the WordPress community is also a great way to e
 4. The pages list will show which pages are currently locked
 
 == Changelog ==
+
+= 0.2.2 =
+* Added locking of page template
 
 = 0.2.1 =
 * Fixed clash with Simple Page Ordering plugin

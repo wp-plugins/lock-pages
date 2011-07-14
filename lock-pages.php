@@ -4,7 +4,7 @@ Plugin Name: Lock Pages
 Plugin URI: http://wordpress.org/extend/plugins/lock-pages/
 Description: Allows admins to lock pages in order to prevent breakage of important URLs.
 Author: Steve Taylor
-Version: 0.2.1
+Version: 0.2.2
 Author URI: http://sltaylor.co.uk
 Based on: http://pressography.com/plugins/wordpress-plugin-template/
 */
@@ -102,6 +102,7 @@ if ( ! class_exists('SLT_LockPages') ) {
 			// Filters to block saving
 			add_filter( 'name_save_pre', array( &$this, 'lock_slug' ), 0 );
 			add_filter( 'parent_save_pre', array( &$this, 'lock_parent' ), 0 );
+			add_filter( 'page_template_pre', array( &$this, 'lock_template' ), 0 );
 			add_filter( 'status_save_pre', array( &$this, 'lock_status' ), 0 );
 			add_filter( 'password_save_pre', array( &$this, 'lock_password' ), 0 );
 			add_filter( 'user_has_cap', array( &$this, 'lock_deletion' ), 0, 3 );
@@ -199,7 +200,7 @@ if ( ! class_exists('SLT_LockPages') ) {
 		/**
 		* Prevents unauthorized users changing a page's password protection.
 		*
-		* @since	2.0
+		* @since	0.2
 		* @return	string
 		*/
 		function lock_password( $password ) {
@@ -215,7 +216,23 @@ if ( ! class_exists('SLT_LockPages') ) {
 		/**
 		* Prevents unauthorized users changing a page's status.
 		*
-		* @since	2.0
+		* @since	0.2
+		* @return	string
+		*/
+		function lock_template( $template ) {
+			// Can user edit this page?
+			if ( ! array_key_exists( 'post_ID', $_POST ) || $this->user_can_edit( $_POST['post_ID'] ) ) {
+				return $template;
+			} else {
+				// Keep old status, user can't change it
+				return $_POST[$this->prefix.'old_page_template'];
+			}
+		}
+
+		/**
+		* Prevents unauthorized users changing a page's status.
+		*
+		* @since	0.2
 		* @return	string
 		*/
 		function lock_status( $status ) {
@@ -310,6 +327,7 @@ if ( ! class_exists('SLT_LockPages') ) {
 			echo '<input type="hidden" name="' . esc_attr( $this->prefix ) . 'old_status" value="' . esc_attr( $post->post_status ) . '" />';
 			echo '<input type="hidden" name="' . esc_attr( $this->prefix ) . 'old_slug" value="' . esc_attr( $post->post_name ) . '" />';
 			echo '<input type="hidden" name="' . esc_attr( $this->prefix ) . 'old_parent" value="' . esc_attr( $post->post_parent ) . '" />';
+			echo '<input type="hidden" name="' . esc_attr( $this->prefix ) . 'old_page_template" value="' . esc_attr( $post->page_template ) . '" />';
 		}
 
 		/**
@@ -449,7 +467,7 @@ if ( ! class_exists('SLT_LockPages') ) {
 		/**
 		* Load JavaScript and CSS
 		* 
-		* @since	2.0
+		* @since	0.2
 		* @uses	wp_enqueue_script() wp_enqueue_style()
 		*/
 		function load_js_css() {
@@ -460,7 +478,7 @@ if ( ! class_exists('SLT_LockPages') ) {
 		/**
 		* Signal a locked page with a body class
 		* 
-		* @since	2.0
+		* @since	0.2
 		* @global	$post $pagenow
 		*/
 		function admin_body_class( $class ) {
