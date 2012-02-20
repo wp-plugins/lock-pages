@@ -25,6 +25,8 @@ Locking is implemented by preventing the actual database update being performed 
 
 NOTE: Currently, I've been unable to get this working with the Quick Edit functionality. As a stop-gap measure, which is only in place because it seems to be better than nothing, the Quick Edit link is removed for users who can't edit locked pages. I know, it's not great. But until I work out how to selectively block Quick Editing, I'm assuming a locked page should be locked. Users can always edit the other fields via the normal edit page.
 
+Development code hosted at [GitHub](https://github.com/gyrus/Lock-Pages).
+
 == Installation ==
 
 It's easiest to use the built-in plugin installer inside WordPress. Go to *Plugins > Add New*, and search for "lock pages".
